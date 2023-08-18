@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminOrganizationController;
+use App\Http\Controllers\AdminStudentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentHelperController;
 use App\Http\Controllers\OrganizationHelperController;
@@ -9,31 +11,32 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
-// Route::get('/', function () {
-//     return redirect()->route('login');
-// });
-
-
+Route::get('/', [DashboardController::class, 'home'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
 // Dashboard
     Route::get('dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('admin/organization', [AdminOrganizationController::class,'adminOrganization'])->name('admin.organization');
+   
+    Route::get('admin/admission-notice', [AdminOrganizationController::class,'adminAdmissionNotice'])->name('admin.admission.notice');
+    Route::get('admin/scholarship-notice', [AdminOrganizationController::class,'adminScholarshipNotice'])->name('admin.scholarship.notice');
 
-// User Management
-    Route::get('user', [UserController::class,'index'])->name('user.all');
-    Route::get('user/add',  [UserController::class,'add'])->name('user.add');
-    Route::post('user/add',  [UserController::class,'addPost']);
-    Route::get('user/edit/{user}',  [UserController::class,'edit'])->name('user.edit');
-    Route::post('user/edit/{user}',  [UserController::class,'editPost']);
+    Route::get('admin/admission-view/{id}', [AdminOrganizationController::class,'adminAdmissionView'])->name('admin.admission.view');
+    Route::get('admin/scholarship-view/{id}', [AdminOrganizationController::class,'adminScholarshipView'])->name('admin.scholarship.view');
 
-//Administrator Area
-// Unit
-    Route::get('unit', [UnitController::class,'index'])->name('unit');
-    Route::get('unit/add', [UnitController::class,'add'])->name('unit.add');
-    Route::post('unit/add', [UnitController::class,'addPost']);
-    Route::get('unit/edit/{unit}', [UnitController::class,'edit'])->name('unit.edit');
-    Route::post('unit/edit/{unit}', [UnitController::class,'editPost']);
+    Route::get('admin/admission-payment', [AdminOrganizationController::class,'adminAdmissionPayment'])->name('admin.admission.payment');
+    Route::get('admin/scholarship-payment', [AdminOrganizationController::class,'adminScholarshipPayment'])->name('admin.scholarship.payment');
 
+    Route::get('admin/admission-application/{id}', [AdminOrganizationController::class,'adminAdmissionApplication'])->name('admin.admission.application');
+    Route::get('admin/scholarship-application/{id}', [AdminOrganizationController::class,'adminScholarshipApplication'])->name('admin.scholarship.application');
+
+    Route::get('admin/organization-admission-notice/{id}', [AdminOrganizationController::class,'adminOrganizationAdmissionNotice'])->name('admin.organization.admission.notice');
+    Route::get('admin/organization-scholarship-notice/{id}', [AdminOrganizationController::class,'adminOrganizationScholarshipNotice'])->name('admin.organization.scholarship.notice');
+
+    Route::get('admin/student', [AdminStudentController::class,'adminStudent'])->name('admin.student');
+    Route::get('admin/view-cv/{id}', [AdminStudentController::class,'adminViewCV'])->name('admin.viewCV');
+    Route::get('admin/student-payment', [AdminStudentController::class,'adminStudentPayment'])->name('admin.student.payment');
+    
 });
 
 require __DIR__.'/auth.php';
@@ -52,8 +55,8 @@ Route::middleware(['student'])->group(function(){
 
     Route::get('student-dashboard', [DashboardController::class,'studentDashboard'])->name('student_dashboard');
     Route::match(['get','post'],'my-cv', [StudentHelperController::class,'myCv'])->name('my_cv');
-    Route::match(['get','post'],'all-admission', [StudentHelperController::class,'admissionList'])->name('admission.list');
-    Route::match(['get','post'],'all-scholarship', [StudentHelperController::class,'scholarshipList'])->name('scholarship.list');
+    Route::match(['get','post'],'all-admission', [StudentHelperController::class,'admissionList'])->name('admission.student.list');
+    Route::match(['get','post'],'all-scholarship', [StudentHelperController::class,'scholarshipList'])->name('scholarship.student.list');
     Route::get('single-admission/{id}', [StudentHelperController::class,'admissionSingle'])->name('admission.single');
     Route::get('single-scholarship/{id}', [StudentHelperController::class,'scholarshipSingle'])->name('scholarship.single');
     Route::get('admission-apply/{id}', [StudentHelperController::class,'admissionApply'])->name('admission.apply');
@@ -81,8 +84,14 @@ Route::middleware(['organization'])->group(function(){
     Route::get('admission-list', [OrganizationHelperController::class,'admissionList'])->name('admission.list');
     Route::get('admission-application/{id}', [OrganizationHelperController::class,'admissionApplication'])->name('admission.application');
     Route::get('admission-application-approve-reject/{id}/{status}', [OrganizationHelperController::class,'admissionApplicationApproveReject'])->name('admission.application.approve.reject');
+    
     Route::get('scholarship-list', [OrganizationHelperController::class,'scholarshipList'])->name('scholarship.list');
     Route::get('scholarship-application/{id}', [OrganizationHelperController::class,'scholarshipApplication'])->name('scholarship.application');
     Route::get('scholarship-application-approve-reject/{id}/{status}', [OrganizationHelperController::class,'scholarshipApplicationApproveReject'])->name('scholarship.application.approve.reject');
-    
+
+    Route::post('admission-payment', [OrganizationHelperController::class, 'admissionPayment'])->name('admission.payment');
+    Route::post('scholarship-payment', [OrganizationHelperController::class, 'scholarshipPayment'])->name('scholarship.payment');
+
+    Route::get('admission-view-cv/{student_id}', [OrganizationHelperController::class, 'viewCVAdmission'])->name('view.cv.admission');
+    Route::get('scholarship-view-cv/{student_id}', [OrganizationHelperController::class, 'viewCVScholarship'])->name('view.cv.scholarship');
 });

@@ -27,40 +27,39 @@
                             <th>Action</th>
                         </tr>
                         </thead>
-
+                        @php
+                           $total = 0;
+                        @endphp
                         <tbody>
                         @foreach($scholarshipApplications as $index => $scholarshipApplication)
                             <tr>
                                 <td>{{ $index+1 }}</td>
                                 <td>{{ $scholarshipApplication->student->name }}</td>
-                                {{-- <td> --}}
-                                    {{-- @php
-                                        $application = \App\Models\ScholarshipApply::where('scholarship_id', $scholarship->id)->get()->count();
+                                <td>
+                                    @php
+                                        $checkPayment = \App\Models\ScholarshipPayment::where('student_id', $scholarshipApplication->student->id)->where('scholarship_id', $scholarshipApplication->id)->first();
+                                        if($checkPayment){
+                                            $total += $checkPayment->amount;
+                                        }
                                     @endphp
-                                    @if($application){{ $application }}@endif --}}
-                                {{-- </td> --}}
+                                    @if($checkPayment)
+                                        {{ $checkPayment->amount }}
+                                    @endif
+                                </td>
                                 <td>
                                     @if($scholarshipApplication->status==0)
-                                        <a class="btn btn-dark btn-sm" href="{{ route("scholarship.application.approve.reject", ['id'=>$scholarshipApplication->id,'status'=>1]) }}">Approve</a>
-                                        <a class="btn btn-danger btn-sm" href="{{ route("scholarship.application.approve.reject", ['id'=>$scholarshipApplication->id,'status'=>2]) }}">Reject</a>
+                                        <a class="btn btn-dark btn-sm" href="#">Pending</a>
                                     @elseif($scholarshipApplication->status==1)
                                         @php
                                             $checkPayment = \App\Models\ScholarshipPayment::where('student_id', $scholarshipApplication->student->id)->where('scholarship_id', $scholarshipApplication->id)->first();
                                         @endphp
                                         {{-- {{ dd($checkPayment) }} --}}
                                         @if($checkPayment)
-                                            <a href="{{ route("view.cv.scholarship", ['student_id' => $scholarshipApplication->student->id]) }}" class="btn btn-primary btn-sm">View CV</a>
                                             <a href="#" class="btn btn-primary btn-sm">Approved</a>
+                                            <a href="#" class="btn btn-primary btn-sm">Payment Success</a>
                                         @else
-                                            <form method="POST" action="{{ route('scholarship.payment') }}">
-                                                @csrf
-                                                <input type="hidden" name="scholarship_id" value="{{ $scholarshipApplication->id }}">
-                                                <input type="hidden" name="student_id" value="{{ $scholarshipApplication->student->id }}">
-                                                <input type="number" min="500" max="1000" name="amount" placeholder="Amount" required>
-                                                <input type="text" name="card" placeholder="Card" required>
-                                                <button type="submit" class="btn btn-info btn-sm">Payment</button>
-                                                <a href="#" class="btn btn-primary btn-sm">Approved</a>
-                                            </form>
+                                            <a href="#" class="btn btn-primary btn-sm">Approved</a>
+                                            <a href="#" class="btn btn-primary btn-sm">Payment Pending</a>
                                         @endif
                                     @elseif($scholarshipApplication->status==2)
                                         <a class="btn btn-danger btn-sm" href="#">Rejected</a>
@@ -68,6 +67,14 @@
                                 </td>
                             </tr>
                         @endforeach
+                            <tr>
+                                <td colspan="2" class="text-right">
+                                    Total
+                                </td>
+                                <td colspan="2">
+                                    {{ $total }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     </div>

@@ -6,22 +6,14 @@
 @endsection
 
 @section('title')
-    Users
+    Admission List
 @endsection
 
 @section('content')
-    @if(Session::has('message'))
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ Session::get('message') }}
-        </div>
-    @endif
-
     <div class="row">
         <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <a href="{{ route('user.add') }}" class="btn btn-primary bg-gradient-primary">Add User</a>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -29,37 +21,27 @@
                     <table id="table" class="table table-bordered table-striped">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-{{--                            <th>Company</th>--}}
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Total Application</th>
                             <th>Action</th>
                         </tr>
                         </thead>
 
                         <tbody>
-                        @foreach($users as $user)
+                        @foreach($admissions as $index => $admission)
                             <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $index+1 }}</td>
+                                <td>{{ $admission->title }}</td>
                                 <td>
-                                    @if($user->role == 1)
-                                          Admin
-                                    @elseif($user->role == 2)
-                                        Technician
-                                    @else
-                                    @endif
+                                    @php
+                                        $application = \App\Models\AdmissionApply::where('admission_id', $admission->id)->get()->count();
+                                    @endphp
+                                    @if($application){{ $application }}@endif
                                 </td>
-{{--                                <td>--}}
-{{--                                    @if($user->company_type == 1)--}}
-{{--                                        Kent Company--}}
-{{--                                    @elseif($user->company_type == 2)--}}
-{{--                                    Care Company--}}
-{{--                                    @else--}}
-{{--                                    @endif--}}
-{{--                                </td>--}}
                                 <td>
-                                    <a class="btn btn-info btn-sm" href="{{ route('user.edit', ['user' => $user->id]) }}">Edit</a>
+                                    <a class="btn btn-info btn-sm" href="{{ route('admin.admission.view', ['id'=> $admission->id]) }}">View Notice</a>
+                                    <a class="btn btn-info btn-sm" href="{{ route('admin.admission.application', ['id'=> $admission->id]) }}">View All Application</a>
                                 </td>
                             </tr>
                         @endforeach

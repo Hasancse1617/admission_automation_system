@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Admission;
 use App\Models\AdmissionApply;
+use App\Models\AdmissionPayment;
+use App\Models\Education;
+use App\Models\Project;
 use App\Models\Scholarship;
 use App\Models\ScholarshipApply;
+use App\Models\ScholarshipPayment;
+use App\Models\StudentDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,5 +58,59 @@ class OrganizationHelperController extends Controller
         }else{
             return redirect()->back()->with('error', 'Application Rejected');
         }
+    }
+
+    public function admissionPayment(Request $request){
+        $rules = [
+            'amount' => ['required', 'string', 'max:255'],
+            'card' => 'required|numeric',
+        ];
+        $request->validate($rules);
+        
+        AdmissionPayment::create([
+            'organization_id' => Auth::user()->id,
+            'student_id' => $request->student_id,
+            'admission_id' => $request->admission_id,
+            'amount' => $request->amount,
+            'card' => $request->card,
+            'status' => 1,
+        ]);
+
+        return redirect()->back()->with('message', "Payment Successful");
+    }
+
+    public function scholarshipPayment(Request $request){
+        $rules = [
+            'amount' => ['required', 'string', 'max:255'],
+            'card' => 'required|numeric',
+        ];
+        $request->validate($rules);
+
+        ScholarshipPayment::create([
+            'organization_id' => Auth::user()->id,
+            'student_id' => $request->student_id,
+            'scholarship_id' => $request->scholarship_id,
+            'amount' => $request->amount,
+            'card' => $request->card,
+            'status' => 1,
+        ]);
+
+        return redirect()->back()->with('message', "Payment Successful");
+    }
+
+    public function viewCVAdmission($student_id){
+        $studentDetail = StudentDetail::where('student_id', $student_id)->first();
+        $projects = Project::where('student_id', $student_id)->get();
+        $educations = Education::where('student_id', $student_id)->get();
+
+        return view("organization.admission.student_cv", compact('studentDetail','projects','educations'));
+    }
+
+    public function viewCVScholarship($student_id){
+        $studentDetail = StudentDetail::where('student_id', $student_id)->first();
+        $projects = Project::where('student_id', $student_id)->get();
+        $educations = Education::where('student_id', $student_id)->get();
+
+        return view("organization.admission.student_cv", compact('studentDetail','projects','educations'));
     }
 }

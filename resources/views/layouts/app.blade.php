@@ -391,31 +391,97 @@
                     </li>
                     @endif
                     
+                    @if(Auth::user()->role == 1)
                     <?php
                     $subMenu = [
-                        'user.all', 'user.add', 'user.edit',
+                        'admin.organization', 'admin.admission.notice', 'admin.scholarship.notice',
+                        'admin.admission.application','admin.scholarship.application','admin.admission.view',
+                        'admin.scholarship.view','admin.organization.admission.notice','admin.organization.scholarship.notice'
                     ];
                     ?>
-
-                    @if(Auth::user()->role == 1)
                     <li class="nav-item {{ in_array(Route::currentRouteName(), $subMenu) ? 'menu-open' : '' }}">
                         <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), $subMenu) ? 'active' : '' }}">
                             <i class="nav-icon fas fa-list"></i>
                             <p>
-                                Administrator
+                                Organization
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
                             <?php
                             $subSubMenu = [
-                                'user.all', 'user.add', 'user.edit',
+                                'admin.organization','admin.organization.admission.notice','admin.organization.scholarship.notice'
                             ];
                             ?>
                             <li class="nav-item">
-                                <a href="{{ route('user.all') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                <a href="{{ route('admin.organization') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
                                     <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
-                                    <p>User</p>
+                                    <p>Organization</p>
+                                </a>
+                            </li>
+
+                            <?php
+                            $subSubMenu = [
+                                'admin.admission.notice', 'admin.admission.application', 'admin.admission.view',
+                            ];
+                            ?>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.admission.notice') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                    <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
+                                    <p>Admission Notice</p>
+                                </a>
+                            </li>
+
+                            <?php
+                            $subSubMenu = [
+                                'admin.scholarship.notice', 'admin.scholarship.application', 'admin.scholarship.view',
+                            ];
+                            ?>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.scholarship.notice') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                    <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
+                                    <p>Scholarship Notice</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <?php
+                    $subMenu = [
+                        'admin.student', 'admin.viewCV', 'admin.student.payment',
+                    ];
+                    ?>
+                    <li class="nav-item {{ in_array(Route::currentRouteName(), $subMenu) ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ in_array(Route::currentRouteName(), $subMenu) ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>
+                                Student
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <?php
+                            $subSubMenu = [
+                                'admin.student', 'admin.viewCV',
+                            ];
+                            ?>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.student') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                    <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
+                                    <p>Student</p>
+                                </a>
+                            </li>
+
+                            <?php
+                            $subSubMenu = [
+                                'admin.student.payment',
+                            ];
+                            ?>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.student.payment') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                    <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
+                                    <p>Payment</p>
                                 </a>
                             </li>
 
@@ -442,7 +508,7 @@
                     
                     <?php
                     $subMenu = [
-                        'admission.list', 'scholarship.list', 'admission.single',
+                        'admission.student.list', 'scholarship.student.list', 'admission.single',
                         'scholarship.single'
                     ];
                     ?>
@@ -457,11 +523,11 @@
                         <ul class="nav nav-treeview">
                             <?php
                             $subSubMenu = [
-                                'admission.list', 'admission.single',
+                                'admission.student.list', 'admission.single',
                             ];
                             ?>
                             <li class="nav-item">
-                                <a href="{{ route('admission.list') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                <a href="{{ route('admission.student.list') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
                                     <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
                                     <p>Admission Notice</p>
                                 </a>
@@ -469,11 +535,11 @@
 
                             <?php
                             $subSubMenu = [
-                                'scholarship.list', 'scholarship.single', 'user.edit',
+                                'scholarship.student.list', 'scholarship.single', 'user.edit',
                             ];
                             ?>
                             <li class="nav-item">
-                                <a href="{{ route('scholarship.list') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
+                                <a href="{{ route('scholarship.student.list') }}" class="nav-link {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'active' : '' }}">
                                     <i class="far  {{ in_array(Route::currentRouteName(), $subSubMenu) ? 'fa-check-circle' : 'fa-circle' }} nav-icon"></i>
                                     <p>Scholarship Notice</p>
                                 </a>
@@ -527,8 +593,8 @@
 
                     <?php
                         $subMenu = [
-                            'admission.list','admission.application',
-                            'scholarship.list','scholarship.application',
+                            'admission.list','admission.application','view.cv.admission',
+                            'scholarship.list','scholarship.application','view.cv.scholarship',
                         ];
                     ?>
                     <li class="nav-item {{ in_array(Route::currentRouteName(), $subMenu) ? 'menu-open' : '' }}">
@@ -542,7 +608,7 @@
                         <ul class="nav nav-treeview">
                             <?php
                             $subSubMenu = [
-                                'admission.list','admission.application'
+                                'admission.list','admission.application','view.cv.admission',
                             ];
                             ?>
                             <li class="nav-item">
@@ -554,7 +620,7 @@
 
                             <?php
                             $subSubMenu = [
-                                'scholarship.list','scholarship.application',
+                                'scholarship.list','scholarship.application','view.cv.scholarship',
                             ];
                             ?>
                             <li class="nav-item">

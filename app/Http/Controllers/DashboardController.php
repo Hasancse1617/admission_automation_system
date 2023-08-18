@@ -11,6 +11,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
+    public function home(){
+        return view('welcome');
+    }
+
     public function index() {
         return view('dashboard');
     }
